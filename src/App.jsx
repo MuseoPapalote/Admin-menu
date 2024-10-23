@@ -17,12 +17,13 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/zonas" element={<ZonasList />} />
         <Route path="/zonas/:id_zona" element={<ZonaForm />} />
+        <Route path="/zonas/create" element={<ZonaForm />} />
         <Route path="/exposiciones" element={<ExposicionesList />} />
         <Route path="/exposiciones/:id_exposicion" element={<ExposicionForm />} />
+        <Route path="/exposiciones/create" element={<ExposicionForm />} />
         <Route path="/preguntas" element={<PreguntasList />} />
         <Route path="/preguntas/:id_pregunta" element={<PreguntaForm />} />
         <Route path="/preguntas/create" element={<PreguntaForm />} />
-        <Route path="/exposiciones/create" element={<ExposicionForm />} />
       </Routes>
     </Router>
   );

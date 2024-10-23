@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import './ExposicionesList.css'; // Estilos para las exposiciones
 
 function ExposicionesList() {
   const [exposiciones, setExposiciones] = useState([]);
-  const token = localStorage.getItem('token');
 
   useEffect(() => {
     const fetchExposiciones = async () => {
+      const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:8080/admin/exposiciones', {
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       });
       setExposiciones(response.data);
     };
+
     fetchExposiciones();
   }, []);
 
   return (
-    <div>
+    <div className="exposiciones-list-container">
+      <Link to="/dashboard" className="back-btn">← Volver al Dashboard</Link>
       <h2>Exposiciones</h2>
-      <ul>
+      <Link to="/exposiciones/create" className="create-btn">+ Crear Nueva Exposición</Link> {/* Botón para crear nueva exposición */}
+      <div className="exposiciones-list">
         {exposiciones.map((exposicion) => (
-          <li key={exposicion.id_exposicion}>
-            <Link to={`/exposiciones/${exposicion.id_exposicion}`}>{exposicion.nombre_exposicion}</Link>
-          </li>
+          <div key={exposicion.id_exposicion} className="exposicion-card">
+            <h3>{exposicion.nombre_exposicion}</h3>
+            <p>Zona: {exposicion.id_zona}</p>
+            <p>Descripción: {exposicion.descripcion}</p>
+            <p>QR: {exposicion.codigo_qr}</p>
+            <p>Estado: {exposicion.activo ? 'Activo' : 'Inactivo'}</p>
+            <Link to={`/exposiciones/${exposicion.id_exposicion}`} className="edit-btn">Editar</Link>
+          </div>
         ))}
-      </ul>
-      <Link to="/exposiciones/create">
-        <button>Crear Nueva Exposición</button>
-      </Link>
+      </div>
     </div>
   );
 }
