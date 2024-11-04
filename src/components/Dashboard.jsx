@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './Dashboard.css'; // Estilos para el dashboard
+import axios from 'axios';
+import './Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();
+  const [totalZonas, setTotalZonas] = useState(0);
+  const [totalExposiciones, setTotalExposiciones] = useState(0);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const token = localStorage.getItem('token');
+      const overViewResponse = await axios.get('http://localhost:8080/admin/overview',{
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      setTotalZonas(parseInt(overViewResponse.data[0].total_zonas));
+      setTotalExposiciones(parseInt(overViewResponse.data[0].total_exposiciones));
+    };
+
+    fetchCounts();
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Limpia el token
-    navigate('/'); // Redirige a la página de login
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   return (
@@ -19,18 +36,13 @@ function Dashboard() {
       <div className="boards">
         <div className="board">
           <h2>Zonas</h2>
-          <p>Total: 10</p> {/* Contador de zonas */}
+          <p>Total: {totalZonas}</p>
           <Link to="/zonas" className="view-btn">Ver Zonas</Link>
         </div>
         <div className="board">
           <h2>Exposiciones</h2>
-          <p>Total: 15</p> {/* Contador de exposiciones */}
+          <p>Total: {totalExposiciones}</p>
           <Link to="/exposiciones" className="view-btn">Ver Exposiciones</Link>
-        </div>
-        <div className="board">
-          <h2>Preguntas</h2>
-          <p>Total: 20</p> {/* Contador de preguntas */}
-          <Link to="/preguntas" className="view-btn">Ver Preguntas</Link>
         </div>
       </div>
     </div>

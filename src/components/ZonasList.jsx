@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './ZonasList.css'; // Estilos para las zonas
+import './ZonasList.css';
 
 function ZonasList() {
   const [zonas, setZonas] = useState([]);
@@ -10,9 +10,7 @@ function ZonasList() {
     const fetchZonas = async () => {
       const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:8080/admin/zonas', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setZonas(response.data);
     };
@@ -30,6 +28,7 @@ function ZonasList() {
           <div key={zona.id_zona} className="zona-card">
             <h3>{zona.nombre_zona}</h3>
             <p>Descripción: {zona.descripcion}</p>
+            <p>Visitas: {zona.total_visitas}</p>
             <Link to={`/zonas/${zona.id_zona}`} className="edit-btn">Editar</Link>
           </div>
         ))}

@@ -1,57 +1,89 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
-import './ExposicionForm.css'; // Estilos para el formulario
+import './ExposicionForm.css';
 
 function ExposicionForm() {
   const { id_exposicion } = useParams();
-  console.log(id_exposicion);
-  const [exposicion, setExposicion] = useState({ nombre_exposicion: '', id_zona: '',descripcion: '', codigo_qr: '', activo: true });
+  const [exposicion, setExposicion] = useState({
+    nombre_exposicion: '',
+    id_zona: '', // Asegurarse de que id_zona esté aquí
+    descripcion: '',
+    codigo_qr: '',
+    activo: true,
+    preguntas: [],
+  });
+  const [zonas, setZonas] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (id_exposicion) {
-      const fetchExposicion = async () => {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    const fetchZonas = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get('http://localhost:8080/admin/zonas', {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setExposicion(response.data);
-      };
-      fetchExposicion();
-    }
+        setZonas(response.data);
+      } catch (error) {
+        console.error('Error al cargar zonas:', error);
+      }
+    };
+
+    const fetchExposicion = async () => {
+      if (id_exposicion) {
+        const token = localStorage.getItem('token');
+        try {
+          const response = await axios.get(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setExposicion({
+            ...response.data,
+            id_zona: response.data.id_zona, // Asegurar que id_zona se establezca al valor correcto
+            preguntas: response.data.preguntas || [],
+          });
+        } catch (error) {
+          console.error('Error al cargar la exposición:', error);
+        }
+      }
+    };
+
+    fetchZonas();
+    fetchExposicion();
   }, [id_exposicion]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    if (id_exposicion) {
-      await axios.put(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, exposicion, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    } else {
-      await axios.post('http://localhost:8080/admin/exposiciones', exposicion, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    try {
+      if (id_exposicion) {
+        await axios.put(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, exposicion, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      } else {
+        await axios.post('http://localhost:8080/admin/exposiciones', exposicion, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }
+      navigate('/exposiciones');
+    } catch (error) {
+      console.error('Error al guardar la exposición:', error);
     }
-    navigate('/exposiciones');
   };
 
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
-    await axios.delete(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    navigate('/exposiciones');
+    try {
+      await axios.delete(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      navigate('/exposiciones');
+    } catch (error) {
+      console.error('Error al eliminar la exposición:', error);
+    }
+  };
+
+  const handleAddPregunta = () => {
+    navigate(`/preguntas/create/${id_exposicion}`, { state: { id_exposicion } });
   };
 
   return (
@@ -61,32 +93,77 @@ function ExposicionForm() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Nombre de la Exposición:</label>
-          <input type="text" value={exposicion.nombre_exposicion} onChange={(e) => setExposicion({ ...exposicion, nombre_exposicion: e.target.value })} required />
+          <input
+            type="text"
+            value={exposicion.nombre_exposicion}
+            onChange={(e) => setExposicion({ ...exposicion, nombre_exposicion: e.target.value })}
+            required
+          />
         </div>
-        <div>
+        <div className="form-group">
           <label>Zona:</label>
-          <select value={exposicion.id_zona} onChange={(e) => setExposicion({ ...exposicion, id_zona: e.target.value })} required>
+          <select
+            value={exposicion.id_zona || ''} // Mostrar la zona actual si se está editando
+            onChange={(e) => setExposicion({ ...exposicion, id_zona: e.target.value })}
+            required
+          >
             <option value="">Selecciona una zona</option>
-            <option value="1">Zona 1</option>
-            <option value="2">Zona 2</option>
-            <option value="3">Zona 3</option>
+            {zonas.map((zona) => (
+              <option key={zona.id_zona} value={zona.id_zona}>
+                {zona.nombre_zona}
+              </option>
+            ))}
           </select>
         </div>
         <div className="form-group">
           <label>Descripción:</label>
-          <textarea value={exposicion.descripcion} onChange={(e) => setExposicion({ ...exposicion, descripcion: e.target.value })} required />
+          <textarea
+            value={exposicion.descripcion}
+            onChange={(e) => setExposicion({ ...exposicion, descripcion: e.target.value })}
+          />
         </div>
         <div className="form-group">
           <label>Código QR:</label>
-          <input type="text" value={exposicion.codigo_qr} onChange={(e) => setExposicion({ ...exposicion, codigo_qr: e.target.value })} required />
+          <input
+            type="text"
+            value={exposicion.codigo_qr}
+            onChange={(e) => setExposicion({ ...exposicion, codigo_qr: e.target.value })}
+            required
+          />
         </div>
         <div className="form-group">
-          <label>Activo:</label>
-          <input type="checkbox" checked={exposicion.activo} onChange={(e) => setExposicion({ ...exposicion, activo: e.target.checked })} />
+          <label>Estado Activo:</label>
+          <select
+            value={exposicion.activo}
+            onChange={(e) => setExposicion({ ...exposicion, activo: e.target.value === 'true' })}
+          >
+            <option value="true">Activo</option>
+            <option value="false">Inactivo</option>
+          </select>
         </div>
         <button type="submit" className="submit-btn">{id_exposicion ? 'Actualizar' : 'Crear'}</button>
-        {id_exposicion && <button type="button" className="delete-btn" onClick={handleDelete}>Eliminar</button>}
+        {id_exposicion && (
+          <button type="button" className="delete-btn" onClick={handleDelete}>
+            Eliminar
+          </button>
+        )}
       </form>
+
+      {id_exposicion && (
+        <>
+          <h3>Preguntas de esta Exposición</h3>
+          <button className="add-pregunta-btn" onClick={handleAddPregunta}>+ Añadir Pregunta</button>
+          <div className="preguntas-list">
+            {exposicion.preguntas.map((pregunta) => (
+              <div key={pregunta.id_pregunta} className="pregunta-card">
+                <p>{pregunta.texto_pregunta}</p>
+                <Link to={`/preguntas/${pregunta.id_pregunta}`} className="edit-btn">Editar</Link>
+              </div>
+            ))}
+            {exposicion.preguntas.length === 0 && <p>No hay preguntas para esta exposición.</p>}
+          </div>
+        </>
+      )}
     </div>
   );
 }

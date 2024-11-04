@@ -24,12 +24,15 @@ function PreguntasList() {
     <div className="preguntas-list-container">
       <Link to="/dashboard" className="back-btn">← Volver al Dashboard</Link>
       <h2>Preguntas de Trivia</h2>
-      <Link to="/preguntas/create" className="create-btn">+ Crear Nueva Pregunta</Link> {/* Botón para crear nueva pregunta */}
+      <Link to="/preguntas/create" className="create-btn">+ Crear Nueva Pregunta</Link>
       <div className="preguntas-list">
         {preguntas.map((pregunta) => (
           <div key={pregunta.id_pregunta} className="pregunta-card">
             <h3>{pregunta.texto_pregunta}</h3>
-            <p>Tipo: {pregunta.tipo_pregunta}</p>
+            <p>Opción 1: {pregunta.opcion_1}</p>
+            <p>Opción 2: {pregunta.opcion_2}</p>
+            <p>Opción 3: {pregunta.opcion_3}</p>
+            <p>Respuesta Correcta: Opción {pregunta.respuesta_correcta}</p>
             <Link to={`/preguntas/${pregunta.id_pregunta}`} className="edit-btn">Editar</Link>
           </div>
         ))}
