@@ -11,7 +11,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchCounts = async () => {
       const token = localStorage.getItem('token');
-      const overViewResponse = await axios.get('http://localhost:8080/admin/overview',{
+      const overViewResponse = await axios.get('https://museoapi.org/admin/overview',{
         headers: { Authorization: `Bearer ${token}` },
       })
 

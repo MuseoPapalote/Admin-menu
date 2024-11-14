@@ -9,7 +9,7 @@ function PreguntasList() {
   useEffect(() => {
     const fetchPreguntas = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8080/admin/preguntas', {
+      const response = await axios.get('https://museoapi.org/admin/preguntas', {
         headers: {
           Authorization: `Bearer ${token}`,
         },

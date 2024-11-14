@@ -12,7 +12,7 @@ function ZonaForm() {
     if (id_zona) {
       const fetchZona = async () => {
         const token = localStorage.getItem('token');
-        const response = await axios.get(`http://localhost:8080/admin/zonas/${id_zona}`, {
+        const response = await axios.get(`https://museoapi.org/admin/zonas/${id_zona}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -27,13 +27,13 @@ function ZonaForm() {
     e.preventDefault();
     const token = localStorage.getItem('token');
     if (id_zona) {
-      await axios.put(`http://localhost:8080/admin/zonas/${id_zona}`, zona, {
+      await axios.put(`https://museoapi.org/admin/zonas/${id_zona}`, zona, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
     } else {
-      await axios.post('http://localhost:8080/admin/zonas', zona, {
+      await axios.post('https://museoapi.org/admin/zonas', zona, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -44,7 +44,7 @@ function ZonaForm() {
 
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
-    await axios.delete(`http://localhost:8080/admin/zonas/${id_zona}`, {
+    await axios.delete(`https://museoapi.org/admin/zonas/${id_zona}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

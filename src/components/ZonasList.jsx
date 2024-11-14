@@ -9,7 +9,7 @@ function ZonasList() {
   useEffect(() => {
     const fetchZonas = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8080/admin/zonas', {
+      const response = await axios.get('https://museoapi.org/admin/zonas', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setZonas(response.data);

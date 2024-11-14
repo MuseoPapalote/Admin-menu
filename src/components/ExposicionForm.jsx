@@ -20,7 +20,7 @@ function ExposicionForm() {
     const fetchZonas = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:8080/admin/zonas', {
+        const response = await axios.get('https://museoapi.org/admin/zonas', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setZonas(response.data);
@@ -33,7 +33,7 @@ function ExposicionForm() {
       if (id_exposicion) {
         const token = localStorage.getItem('token');
         try {
-          const response = await axios.get(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
+          const response = await axios.get(`https://museoapi.org/admin/exposiciones/${id_exposicion}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setExposicion({
@@ -56,11 +56,11 @@ function ExposicionForm() {
     const token = localStorage.getItem('token');
     try {
       if (id_exposicion) {
-        await axios.put(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, exposicion, {
+        await axios.put(`https://museoapi.org/admin/exposiciones/${id_exposicion}`, exposicion, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post('http://localhost:8080/admin/exposiciones', exposicion, {
+        await axios.post('https://museoapi.org/admin/exposiciones', exposicion, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }
@@ -73,7 +73,7 @@ function ExposicionForm() {
   const handleDelete = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:8080/admin/exposiciones/${id_exposicion}`, {
+      await axios.delete(`https://museoapi.org/admin/exposiciones/${id_exposicion}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       navigate('/exposiciones');

@@ -12,9 +12,9 @@ function AdminLogin({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8080/usuarios/login', { email, password });
-      setToken = response.data.token;
-      localStorage.setItem('token', response.data.token);
+      const response = await axios.post('https://museoapi.org/usuarios/login', { email, password });
+      setToken = response.data.accessToken;
+      localStorage.setItem('token', response.data.accessToken);
       navigate('/dashboard');
     } catch (error) {
       setError('Credenciales incorrectas');

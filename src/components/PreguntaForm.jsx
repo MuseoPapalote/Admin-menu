@@ -22,7 +22,7 @@ function PreguntaForm() {
       const fetchPregunta = async () => {
         const token = localStorage.getItem('token');
         try {
-          const response = await axios.get(`http://localhost:8080/admin/preguntas/${id_pregunta}`, {
+          const response = await axios.get(`https://museoapi.org/admin/preguntas/${id_pregunta}`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           setPregunta(response.data);
@@ -40,11 +40,11 @@ function PreguntaForm() {
 
     try {
       if (id_pregunta) {
-        await axios.put(`http://localhost:8080/admin/preguntas/${id_pregunta}`, { ...pregunta, id_exposicion }, {
+        await axios.put(`https://museoapi.org/admin/preguntas/${id_pregunta}`, { ...pregunta, id_exposicion }, {
           headers: { Authorization: `Bearer ${token}` },
         });
       } else {
-        await axios.post('http://localhost:8080/admin/preguntas', { ...pregunta, id_exposicion }, {
+        await axios.post('https://museoapi.org/admin/preguntas', { ...pregunta, id_exposicion }, {
           headers: { Authorization: `Bearer ${token}` },
         });
       }

@@ -9,7 +9,7 @@ function ExposicionesList() {
   useEffect(() => {
     const fetchExposiciones = async () => {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:8080/admin/exposiciones', {
+      const response = await axios.get('https://museoapi.org/admin/exposiciones', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setExposiciones(response.data);
