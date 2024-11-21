@@ -21,7 +21,8 @@ function App() {
         <Route path="/exposiciones" element={<ExposicionesList />} />
         <Route path="/exposiciones/:id_exposicion" element={<ExposicionForm />} />
         <Route path="/exposiciones/create" element={<ExposicionForm />} />
-        <Route path="/preguntas/create/:id_exposicion" element={<PreguntaForm />} /> {/* Nueva Ruta */}
+        <Route path="/preguntas/create/:id_exposicion" element={<PreguntaForm />} /> Nueva Ruta
+        <Route path="/preguntas/create" element={<PreguntaForm />} />
         <Route path="/preguntas/:id_pregunta" element={<PreguntaForm />} /> {/* Editar Pregunta */}
         <Route path="/preguntas" element={<PreguntasList />} />
       </Routes>
